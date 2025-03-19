@@ -32,7 +32,16 @@ const {
     <meta property="og:image" content={image} />
     <!-- Required -->
     <title>{title}</title>
+
+    <!-- TODO: Transiciones de paginas con JS, mas soporte (genera polyfill para obtener compatibilidad en mas navegadores) -->
     <ClientRouter />
+
+    <!-- TODO: Transiciones de paginas con 0 JS, menos soporte -->
+    <!-- <style>
+      @view-transition {
+        navigation: auto;
+      }
+    </style> -->
   </head>
   <body class="bg-slate-800 text-slate-100 m-auto max-w-3xl">
     <main class="mt-10">
