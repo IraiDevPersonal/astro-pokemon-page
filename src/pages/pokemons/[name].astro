@@ -25,9 +25,7 @@ const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
 <MainLayout title="Algun pokemon">
   <section class="mt-10 mx-10 flex flex-col justify-center items-center">
     <div>
-      <a class="hover:underline text-blue-400 text-center block" href="/"
-        >Regresar</a
-      >
+      <a href="/">Regresar</a>
       <h1 class="text-5xl capitalize">{name}</h1>
     </div>
     <PokemonCard isBig name={name} url={url} />
@@ -37,3 +35,11 @@ const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
     </audio>
   </section>
 </MainLayout>
+
+<style>
+  /* TODO: esto solucion el error con apply en tailwind v4 */
+  @reference "../../styles/global.css";
+  a {
+    @apply hover:underline text-blue-400 text-center block;
+  }
+</style>
