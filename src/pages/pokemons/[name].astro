@@ -5,6 +5,7 @@ import type { PokemonListResponse } from "@interfaces/pokemon-list.response";
 import MainLayout from "@layouts/MainLayout.astro";
 import PokemonCard from "@components/pokemon/PokemonCard.astro";
 import Title from "@components/shared/Title.astro";
+import { Icon } from "astro-icon/components";
 
 export const getStaticPaths = (async () => {
   const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
@@ -30,9 +31,16 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
   image={imageSrc}
 >
   <section class="mt-10 mx-10 flex flex-col justify-center items-center">
-    <div class="flex flex-col items-center">
-      <button class="btn" onclick="history.back()">Regresar</button>
-      <Title>{name}</Title>
+    <div class="flex gap-4">
+      <div class="flex flex-col items-center">
+        <button class="btn" onclick="history.back()">Regresar</button>
+        <Title>{name}</Title>
+      </div>
+
+      <button id="btn-favorite" data-name={name} data-id={id}>
+        <Icon data-outline name="heart-outline" size={50} />
+        <Icon data-full class="hidden" name="heart-full" size={50} />
+      </button>
     </div>
 
     <PokemonCard isBig name={name} url={url} />
@@ -44,10 +52,99 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
   </section>
 </MainLayout>
 
+<script>
+  import { $ } from "@utils/query-selector.util";
+
+  type FavoritePokemon = {
+    name: string;
+    id: number;
+  };
+
+  const handlePageLoad = () => {
+    const STORAGE_KEY = "favorites-pokemons";
+    let favoritePokemons: FavoritePokemon[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) ?? "[]"
+    );
+
+    const btnFavorite = $<HTMLButtonElement>("#btn-favorite");
+
+    if (!btnFavorite) return;
+
+    const name = btnFavorite.dataset.name ?? "";
+    const id = +(btnFavorite.dataset.id ?? "0");
+    const isFavoritePokemon = favoritePokemons.some(
+      (pokemon) => pokemon.name === name
+    );
+
+    const heartOutline = btnFavorite.querySelector(
+      "[data-outline]"
+    ) as HTMLElement;
+    const heartFull = btnFavorite.querySelector("[data-full]") as HTMLElement;
+
+    if (isFavoritePokemon) {
+      heartOutline.classList.toggle("hidden");
+      heartFull.classList.toggle("hidden");
+    }
+
+    const toggleFavorite = () => {
+      const isFavorite = favoritePokemons.some(
+        (pokemon) => pokemon.name === name
+      );
+
+      if (isFavorite) {
+        favoritePokemons = favoritePokemons.filter(
+          (pokemon) => pokemon.name !== name
+        );
+      } else {
+        favoritePokemons.push({
+          name,
+          id,
+        });
+      }
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(favoritePokemons));
+    };
+
+    btnFavorite.addEventListener("click", () => {
+      heartOutline.classList.toggle("hidden");
+      heartFull.classList.toggle("hidden");
+
+      toggleFavorite();
+    });
+  };
+
+  // TODO: esto permite que el script se lea siempre cuando usamos view transition
+  document.addEventListener("astro:page-load", handlePageLoad);
+
+  // document.addEventListener("astro:before-preparation", () => {
+  //   console.log("astro:before-preparation");
+  // });
+
+  // document.addEventListener("astro:after-preparation", () => {
+  //   console.log("astro:after-preparation");
+  // });
+
+  // document.addEventListener("astro:before-swap", () => {
+  //   console.log("astro:before-swap");
+  // });
+
+  // document.addEventListener("astro:after-swap", () => {
+  //   console.log("astro:after-swap");
+  // });
+
+  // document.addEventListener("astro:page-load", () => {
+  //   console.log("astro:page-load");
+  // });
+</script>
+
 <style>
   /* TODO: esto solucion el error con apply en tailwind v4 */
   @reference "../../styles/global.css";
   .btn {
-    @apply hover:underline text-blue-400 w-max;
+    @apply hover:underline text-blue-400 w-max cursor-pointer;
+  }
+
+  #btn-favorite {
+    @apply hover:animate-pulse cursor-pointer;
   }
 </style>
