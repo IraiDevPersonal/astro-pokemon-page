@@ -4,6 +4,7 @@ import type { PokemonListResponse } from "@interfaces/pokemon-list.response";
 
 import MainLayout from "@layouts/MainLayout.astro";
 import PokemonCard from "@components/pokemon/PokemonCard.astro";
+import Title from "@components/shared/Title.astro";
 
 export const getStaticPaths = (async () => {
   const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
@@ -29,11 +30,13 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
   image={imageSrc}
 >
   <section class="mt-10 mx-10 flex flex-col justify-center items-center">
-    <div>
-      <a href="/">Regresar</a>
-      <h1 class="text-5xl capitalize">{name}</h1>
+    <div class="flex flex-col items-center">
+      <button class="btn" onclick="history.back()">Regresar</button>
+      <Title>{name}</Title>
     </div>
+
     <PokemonCard isBig name={name} url={url} />
+
     <audio controls class="mt-5">
       <source src={audioSrc} type="audio/ogg" />
       Your browser does not support the audio elements.
@@ -44,7 +47,7 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 <style>
   /* TODO: esto solucion el error con apply en tailwind v4 */
   @reference "../../styles/global.css";
-  a {
-    @apply hover:underline text-blue-400 text-center block;
+  .btn {
+    @apply hover:underline text-blue-400 w-max;
   }
 </style>

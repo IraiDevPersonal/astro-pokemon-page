@@ -1,0 +1,39 @@
+---
+const links = [
+  { href: "/", label: "Listado" },
+  { href: "/pokemons/1", label: "Paginado" },
+  { href: "/favorites", label: "Favoritos" },
+];
+const currentPath = Astro.url.pathname;
+---
+
+<!-- component -->
+<nav class="bg-transparent">
+  <div
+    class="container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300"
+  >
+    {
+      links.map(({ href, label }) => {
+        const isActive = currentPath === href;
+        return (
+          <div>
+            <a
+              href={href}
+              class="text-gray-800 dark:text-gray-200 mx-1.5 sm:mx-6"
+            >
+              {label}
+            </a>
+            {isActive ? (
+              <div
+                transition:name="menu-line"
+                class="border-blue-500 border-b-2 mx-4"
+              />
+            ) : (
+              <div class="border-transparent border-b-2 mx-4" />
+            )}
+          </div>
+        );
+      })
+    }
+  </div>
+</nav>
