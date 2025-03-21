@@ -32,15 +32,14 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 >
   <section class="mt-10 mx-10 flex flex-col justify-center items-center">
     <div class="flex gap-4">
-      <div class="flex flex-col items-center">
-        <button class="btn" onclick="history.back()">Regresar</button>
-        <Title>{name}</Title>
-      </div>
+      <Title>{name}</Title>
 
       <button id="btn-favorite" data-name={name} data-id={id}>
         <Icon data-outline name="heart-outline" size={50} />
         <Icon data-full class="hidden" name="heart-full" size={50} />
       </button>
+
+      <button class="btn-back" onclick="history.back()">Regresar</button>
     </div>
 
     <PokemonCard isBig name={name} url={url} />
@@ -140,7 +139,7 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 <style>
   /* TODO: esto solucion el error con apply en tailwind v4 */
   @reference "../../styles/global.css";
-  .btn {
+  .btn-back {
     @apply hover:underline text-blue-400 w-max cursor-pointer;
   }
 
